@@ -1,11 +1,10 @@
 import './App.css';
-
-import PlaceSearch from './components/PlaceSearch';
+import MyRouter from './MyRouter';
 
 function App() {
   return (
     <div className="App">
-      <PlaceSearch/>
+        <MyRouter/>
     </div>
   );
 }
