@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router';
 
 const TrainDetails = () => {
   const [trainData, setTrainData] = useState(null);
@@ -6,7 +7,10 @@ const TrainDetails = () => {
   const [destination, setDestination] = useState("");
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
-  const API_KEY="3c22ddc13deb16ad27f9f364e5f9b994";
+  const [live, setLive] = useState("");
+  const navigate=useNavigate();
+
+  const API_KEY = "3c22ddc13deb16ad27f9f364e5f9b994";
 
   const fetchStationCode = async (stationName) => {
     try {
@@ -25,15 +29,12 @@ const TrainDetails = () => {
     setLoading(true);
     setError(null);
     try {
-      // Get source station code
       const sourceCode = await fetchStationCode(source);
       if (!sourceCode) throw new Error('Source station code not found');
 
-      // Get destination station code
       const destCode = await fetchStationCode(destination);
       if (!destCode) throw new Error('Destination station code not found');
 
-      // Get trains from source station
       const trainsResponse = await fetch(
         `https://indianrailapi.com/api/v2/AllTrainOnStation/apikey/${API_KEY}/StationCode/${sourceCode}/`
       );
@@ -50,32 +51,33 @@ const TrainDetails = () => {
 
   useEffect(() => {
     fetchTrainData();
-  }, []); // Empty dependency array means this runs once on mount
+  }, []);
+
 
   return (
-    <div className="max-w-2xl mx-auto p-4">
-      <div className="bg-white shadow-md rounded p-6">
-        <h1 className="text-2xl font-bold mb-4">Train Details</h1>
+    <div className="max-w-7xl mx-auto p-6">
+      <div className="bg-white shadow-lg rounded-lg p-8">
+        <h1 className="text-3xl font-bold mb-6 text-blue-600">Train Details</h1>
         
-        <div className="text-left mb-4 grid grid-cols-1 md:grid-cols-2 gap-4">
+        <div className="text-left mb-6 grid grid-cols-1 md:grid-cols-2 gap-6">
           <div>
-            <label className="block text-sm font-medium mb-1">Source</label>
+            <label className="block text-lg font-medium mb-2">Source Station</label>
             <input
               type="text"
               value={source}
               onChange={(e) => setSource(e.target.value)}
               placeholder="Enter source station"
-              className="w-full p-2 border rounded"
+              className="w-full p-3 border-2 border-gray-300 rounded-lg focus:border-blue-500 focus:outline-none"
             />
           </div>
           <div>
-            <label className="block text-sm font-medium mb-1">Destination</label>
+            <label className="block text-lg font-medium mb-2">Destination Station</label>
             <input
               type="text"
               value={destination}
               onChange={(e) => setDestination(e.target.value)}
               placeholder="Enter destination station"
-              className="w-full p-2 border rounded"
+              className="w-full p-3 border-2 border-gray-300 rounded-lg focus:border-blue-500 focus:outline-none"
             />
           </div>
         </div>
@@ -83,27 +85,48 @@ const TrainDetails = () => {
         <button 
           onClick={fetchTrainData}
           disabled={loading}
-          className="w-full bg-blue-500 text-white p-2 rounded hover:bg-blue-600 disabled:bg-blue-300"
+          className="w-full bg-blue-500 text-white p-4 rounded-lg text-lg font-semibold hover:bg-blue-600 disabled:bg-blue-300 transition duration-200"
         >
-          {loading ? 'Searching...' : 'Search Trains'}
+          {loading ? 'Searching for Trains...' : 'Search Trains'}
         </button>
 
         {error && (
-          <div className="mt-4 p-3 bg-red-100 border border-red-400 text-red-700 rounded">
+          <div className="mt-6 p-4 bg-red-100 border-2 border-red-400 text-red-700 rounded-lg">
             {error}
           </div>
         )}
 
         {trainData && (
-          <div className="mt-4">
-            <h3 className=" text-lg font-semibold mb-2">Available Trains</h3>
-            <div className=" text-left flex flex-wrap items-center justify-center gap-4 space-y-2">
+          <div className="mt-8">
+            <h3 className="text-2xl font-semibold mb-6 text-gray-800">Available Trains</h3>
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
               {trainData.Trains?.map((train) => (
-                <div key={train.TrainNo} className="p-8 shadow-lg border-2 rounded">
-                  <p className="font-medium">{train.TrainName}</p>
-                  <p className="text-sm">Train No: {train.TrainNo}</p>
-                  <p className="text-sm">Arrival: {train.ArrivalTime}</p>
-                  <p className="text-sm">Departure: {train.DepartureTime}</p>
+                <div key={train.TrainNo} className="p-6 shadow-xl border-2 rounded-xl hover:border-blue-500 transition duration-200 bg-white">
+                  <div className="flex flex-col space-y-4">
+                    <div className="border-b pb-4">
+                      <h4 className="text-xl font-bold text-blue-600 mb-2">{train.TrainName}</h4>
+                      <p className="text-lg font-semibold text-gray-700">Train No: {train.TrainNo}</p>
+                    </div>
+                    
+                    <div className="space-y-3">
+                      <div className="flex justify-between items-center">
+                        <span className="text-gray-600 font-medium">Arrival:</span>
+                        <span className="text-lg text-green-600 font-semibold">{train.ArrivalTime}</span>
+                      </div>
+                      
+                      <div className="flex justify-between items-center">
+                        <span className="text-gray-600 font-medium">Departure:</span>
+                        <span className="text-lg text-red-600 font-semibold">{train.DepartureTime}</span>
+                      </div>
+                    </div>
+
+                    <button 
+                      onClick={()=>navigate(`/live-status/${train.TrainNo}`)}
+                      className="mt-4 w-full bg-blue-100 text-blue-600 p-3 rounded-lg font-medium hover:bg-blue-200 transition duration-200"
+                    >
+                      Get Live Status
+                    </button>
+                  </div>
                 </div>
               ))}
             </div>
