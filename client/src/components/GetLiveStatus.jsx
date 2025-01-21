@@ -19,7 +19,7 @@ const GetLiveStatus = () => {
           `https://indian-railway-irctc.p.rapidapi.com/api/trains/v1/train/status?departure_date=${formattedDate}&isH5=true&client=web&train_number=${trainNo}`,
           {
             headers: {
-              'x-rapidapi-key': '83fb46a85dmsh868cedd8d96e049p170d8cjsn76188de1bbeb',
+              'x-rapidapi-key': '2efb2634b8msh5075af0e1cd964ap17db04jsn7ebd61dd5771',
               'x-rapidapi-host': 'indian-railway-irctc.p.rapidapi.com',
             },
           }
