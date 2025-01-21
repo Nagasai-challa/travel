@@ -145,7 +145,8 @@ const Map = () => {
             Train Booking Details
           </button>
         </Link>
-        <button className="text-center h-28 w-48 shadow-lg p-5 rounded-lg border-2">
+        <button className="text-center h-28 w-48 shadow-lg p-5 rounded-lg border-2"
+        onClick={()=>{navigate("/get-flight-details")}}>
           Flight Bookings
         </button>
         <button className="text-center h-28 w-48 shadow-lg p-5 rounded-lg border-2">

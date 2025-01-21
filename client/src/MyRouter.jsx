@@ -5,6 +5,7 @@ import GetLiveStatus from './components/GetLiveStatus';
 import Hotels from './components/Hotels';
 import Tempuls from './components/Tempuls';
 import Restraunts from './components/Restraunts';
+import FlightDetails from './components/FlightDetails';
 
 
 const MyRouter = () => {
@@ -17,6 +18,7 @@ const MyRouter = () => {
         <Route path="/get-hotels/:searchQuery" element={<Hotels/>} />
         <Route path="/get-temples/:searchQuery" element={<Tempuls/>} />
         <Route path="/get-restaurants/:searchQuery" element={<Restraunts/>} />
+        <Route path="/get-flight-details/" element={<FlightDetails/>} />
       </Routes>
     </BrowserRouter>
   );
